@@ -1,0 +1,20 @@
+[package]
+name = "type-toppings"
+version = "0.1.0"
+authors = ["Asger Juul Brunshøj <asgerbrunshoj@gmail.com>"]
+description = "Opinionated extensions to standard types"
+edition = "2021"
+publish = true
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/plul/type-toppings"
+
+[features]
+default = ["futures"]
+
+[dependencies]
+error_reporter = "1"
+futures = { version = "0.3.28", optional = true }
+
+[dev-dependencies]
+thiserror = "1"
