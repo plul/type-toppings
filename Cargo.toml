@@ -1,6 +1,6 @@
 [package]
 name = "type-toppings"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Asger Juul Brunshøj <asgerbrunshoj@gmail.com>"]
 description = "Opinionated extensions to standard types"
 edition = "2021"
