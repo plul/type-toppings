@@ -60,6 +60,7 @@ mod tests {
     #[should_panic(expected = "Custom panic: MockError(MockSubError)")]
     fn expect_err() {
         let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+        #[allow(clippy::unnecessary_literal_unwrap)]
         err_val.expect("Custom panic");
     }
 
