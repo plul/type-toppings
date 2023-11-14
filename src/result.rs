@@ -2,15 +2,18 @@ impl<T, E> crate::ResultExt for Result<T, E> {
     type T = T;
     type E = E;
 
-    fn expect_with<'a, F: FnOnce() -> &'a str>(self, f: F) -> Self::T
+    fn expect_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
     where
         Self::E: std::fmt::Debug,
+        M: AsRef<str>,
     {
         if let Ok(t) = self {
             t
         } else {
             let msg = f();
-            self.expect(msg)
+
+            #[allow(clippy::expect_fun_call)]
+            self.expect(msg.as_ref())
         }
     }
 
@@ -21,9 +24,10 @@ impl<T, E> crate::ResultExt for Result<T, E> {
         self.map_err(|err| error_reporter::Report::new(err).pretty(true)).expect(msg)
     }
 
-    fn expect_or_report_with<'a, F: FnOnce() -> &'a str>(self, f: F) -> Self::T
+    fn expect_or_report_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
     where
         Self::E: std::error::Error,
+        M: AsRef<str>,
     {
         self.map_err(|err| error_reporter::Report::new(err).pretty(true)).expect_with(f)
     }
@@ -59,63 +63,109 @@ mod tests {
         err_val.expect("Custom panic");
     }
 
-    #[test]
-    fn expect_with_ok() {
-        let ok_val: Result<i32, MockError> = Ok(42);
-        assert_eq!(ok_val.expect_with(|| "Shouldn't see this"), 42);
+    /// Tests the [ResultExt::expect_with] method.
+    mod expect_with {
+        use super::*;
+
+        #[test]
+        fn ok() {
+            let ok_val: Result<i32, MockError> = Ok(42);
+            assert_eq!(ok_val.expect_with(|| "Shouldn't see this"), 42);
+        }
+
+        #[test]
+        #[should_panic(expected = "Custom panic: MockError(MockSubError)")]
+        fn err() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            err_val.expect_with(|| "Custom panic");
+        }
+
+        #[test]
+        #[should_panic(expected = "Error in module A: MockError(MockSubError)")]
+        fn err_format() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            let this_module = "module A";
+            err_val.expect_with(|| format!("Error in {}", this_module));
+        }
+
+        #[test]
+        #[should_panic(expected = "Custom panic: MockError(MockSubError)")]
+        fn err_borrowed_string() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            let err_msg = String::from("Custom panic");
+            err_val.expect_with(|| &err_msg);
+        }
     }
 
-    #[test]
-    #[should_panic(expected = "Custom panic: MockError(MockSubError)")]
-    fn expect_with_err() {
-        let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
-        err_val.expect_with(|| "Custom panic");
+    /// Tests the [ResultExt::expect_or_report] method.
+    mod expect_or_report {
+        use super::*;
+
+        #[test]
+        fn ok() {
+            let ok_val: Result<i32, MockError> = Ok(42);
+            assert_eq!(ok_val.expect_or_report("Shouldn't see this"), 42);
+        }
+
+        #[test]
+        #[should_panic(expected = "Custom report: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
+        fn err() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            err_val.expect_or_report("Custom report");
+        }
+
+        #[test]
+        #[should_panic(expected = "Error in module A: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
+        fn err_format() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            let this_module = "module A";
+            err_val.expect_or_report(&format!("Error in {}", this_module));
+        }
     }
 
-    #[test]
-    #[should_panic(expected = "Custom panic: MockError(MockSubError)")]
-    fn expect_with_err_borrowed_string() {
-        let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
-        let err_msg = String::from("Custom panic");
-        err_val.expect_with(|| &err_msg);
+    /// Tests the [ResultExt::expect_or_report_with] method.
+    mod expect_or_report_with {
+        use super::*;
+
+        #[test]
+        fn ok() {
+            let ok_val: Result<i32, MockError> = Ok(42);
+            assert_eq!(ok_val.expect_or_report_with(|| "Shouldn't see this"), 42);
+        }
+
+        #[test]
+        #[should_panic(expected = "Dynamic report: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
+        fn err() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            err_val.expect_or_report_with(|| "Dynamic report");
+        }
+
+        #[test]
+        #[should_panic(expected = "Error in module A: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
+        fn err_format() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            let this_module = "module A";
+            err_val.expect_or_report_with(|| format!("Error in {}", this_module));
+        }
     }
 
-    #[test]
-    fn expect_or_report_ok() {
-        let ok_val: Result<i32, MockError> = Ok(42);
-        assert_eq!(ok_val.expect_or_report("Shouldn't see this"), 42);
-    }
+    /// Tests the [ResultExt::unwrap_or_report] method.
+    mod unwrap_or_report {
+        use super::*;
 
-    #[test]
-    #[should_panic(expected = "Custom report: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
-    fn expect_or_report_err() {
-        let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
-        err_val.expect_or_report("Custom report");
-    }
+        #[test]
+        fn ok() {
+            let ok_val: Result<i32, MockError> = Ok(42);
+            assert_eq!(ok_val.unwrap_or_report(), 42);
+        }
 
-    #[test]
-    fn expect_or_report_with_ok() {
-        let ok_val: Result<i32, MockError> = Ok(42);
-        assert_eq!(ok_val.expect_or_report_with(|| "Shouldn't see this"), 42);
-    }
-
-    #[test]
-    #[should_panic(expected = "Dynamic report: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
-    fn expect_or_report_with_err() {
-        let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
-        err_val.expect_or_report_with(|| "Dynamic report");
-    }
-
-    #[test]
-    fn unwrap_or_report_ok() {
-        let ok_val: Result<i32, MockError> = Ok(42);
-        assert_eq!(ok_val.unwrap_or_report(), 42);
-    }
-
-    #[test]
-    #[should_panic(expected = "called `unwrap_or_report()` on an `Err` value: A mock error occurred\n\nCaused by:\n      A mock sub error occurred")]
-    fn unwrap_or_report_err() {
-        let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
-        err_val.unwrap_or_report();
+        #[test]
+        #[should_panic(
+            expected = "called `unwrap_or_report()` on an `Err` value: A mock error occurred\n\nCaused by:\n      A mock sub error occurred"
+        )]
+        fn err() {
+            let err_val: Result<i32, MockError> = Err(MockError(MockSubError));
+            err_val.unwrap_or_report();
+        }
     }
 }

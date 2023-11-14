@@ -55,9 +55,10 @@ pub trait ResultExt {
     /// x.expect_with(|| "Testing expect_with");
     /// ```
     #[track_caller]
-    fn expect_with<'a, F: FnOnce() -> &'a str>(self, f: F) -> Self::T
+    fn expect_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
     where
-        Self::E: std::fmt::Debug;
+        Self::E: std::fmt::Debug,
+        M: AsRef<str>;
 
     /// Unwraps the result, yielding the content of an [`Ok`].
     ///
@@ -116,9 +117,10 @@ pub trait ResultExt {
     /// x.expect_or_report_with(|| "Dynamic failure detected");
     /// ```
     #[track_caller]
-    fn expect_or_report_with<'a, F: FnOnce() -> &'a str>(self, f: F) -> Self::T
+    fn expect_or_report_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
     where
-        Self::E: std::error::Error;
+        Self::E: std::error::Error,
+        M: AsRef<str>;
 
     /// Unwraps the result, yielding the content of an [`Ok`].
     ///
