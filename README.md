@@ -6,7 +6,11 @@ Opinionated collection of utility extensions for several of Rust's standard type
 - `Iterator`
 - `futures::Steam`
 
-## Example:
+## Documentation
+
+<https://docs.rs/type-toppings/latest/type_toppings/>
+
+## Example
 
 ```rust
 use type_toppings::IteratorExt;
