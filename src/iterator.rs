@@ -45,4 +45,13 @@ where
     {
         map_res_err::MapResErr { iter: self, f }
     }
+
+    fn join_as_strings(self, separator: &str) -> String
+    where
+        Self: Iterator,
+        <Self as Iterator>::Item: ToString,
+    {
+        // TODO: Use intersperse when it becomes stable
+        self.map(|x| x.to_string()).collect::<Vec<_>>().join(separator)
+    }
 }

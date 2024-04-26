@@ -2,9 +2,11 @@
 
 ## Unreleased
 
+- Added: `IteratorExt::join_as_strings` - Converts each element of the iterator to a string and joins them into a single string, separated by the specified separator.
+
 ## v0.1.1
 
-- `ResultExt::expect_with()` and `ResultExt::expect_or_report_with()` take a closure that now returns `impl AsRef<str>` rather than `&str`. This means a `String` can be returned, which enables use of the `format` macro in the closure.
+- Changed: `ResultExt::expect_with()` and `ResultExt::expect_or_report_with()` take a closure that now returns `impl AsRef<str>` rather than `&str`. This means a `String` can be returned, which enables use of the `format` macro in the closure.
 
 ## v0.1.0
 

@@ -265,4 +265,23 @@ pub trait IteratorExt {
         Self: Sized,
         Self: Iterator<Item = Result<T, E>>,
         F: FnMut(E) -> U;
+
+    /// Converts each element of the iterator to a string and joins them into a single string, separated by the specified separator.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use type_toppings::IteratorExt as _;
+    /// let numbers = vec![1, 2, 3];
+    /// let joined = numbers.into_iter().join_as_strings(", ");
+    /// assert_eq!(joined, "1, 2, 3");
+    ///
+    /// let words = vec!["hello", "world"];
+    /// let sentence = words.into_iter().join_as_strings(" - ");
+    /// assert_eq!(sentence, "hello - world");
+    /// ```
+    fn join_as_strings(self, separator: &str) -> String
+    where
+        Self: Iterator,
+        <Self as Iterator>::Item: ToString;
 }
