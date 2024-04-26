@@ -2,11 +2,12 @@ _list:
     @just --list --unsorted
 
 # Check project
-check: check-fmt
+check:
+    @ just check-fmt
     @ just hack test
     @ just hack clippy --tests --examples -- -D warnings
     @ RUSTDOCFLAGS='-Dwarnings' just hack doc --no-deps
-    taplo lint `fd --extension=toml`
+    fd --extension=toml -X taplo lint
     nix flake show
     cargo udeps
     cargo outdated --depth=1
@@ -15,17 +16,17 @@ check: check-fmt
 check-fmt:
     just --unstable --fmt --check
     nix fmt -- --check .
-    taplo fmt --check `fd --extension=toml`
+    fd --extension=toml -X taplo fmt --check
     cargo fmt -- --check
-    prettier --check `fd --extension=md`
+    fd --extension=md -X prettier --check
 
 # Format
 fmt:
     just --unstable --fmt
     nix fmt
-    taplo fmt `fd --extension=toml`
+    fd --extension=toml -X taplo fmt
     cargo fmt
-    prettier --write `fd --extension=md`
+    fd --extension=md -X prettier --write 
 
 [private]
 hack *ARGS:
@@ -34,3 +35,6 @@ hack *ARGS:
 # Run cargo check on changes
 watch-check:
     watchexec --clear --restart --exts='rs,toml' -- cargo check --tests --examples
+
+update-flake-inputs:
+    nix flake update
