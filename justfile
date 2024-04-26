@@ -15,7 +15,7 @@ check:
 # Check formatting
 check-fmt:
     just --unstable --fmt --check
-    nix fmt -- --check .
+    fd --extension=nix -X nixfmt --check
     fd --extension=toml -X taplo fmt --check
     cargo fmt -- --check
     fd --extension=md -X prettier --check
@@ -23,7 +23,7 @@ check-fmt:
 # Format
 fmt:
     just --unstable --fmt
-    nix fmt
+    fd --extension=nix -X nixfmt
     fd --extension=toml -X taplo fmt
     cargo fmt
     fd --extension=md -X prettier --write 
