@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.2.1
+
+- Added: Crate metadata to guide docs.rs documentation generation.
+- Added: Feature "full" which enables all features.
+
 ## v0.2.0
 
 - Changed(breaking): No features are enabled by default. Opt in to each extension trait with e.g. `type-toppings = { version = "0.2.0", features = ["iterator"] }`.

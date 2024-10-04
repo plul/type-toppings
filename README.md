@@ -16,7 +16,7 @@ Opinionated collection of utility extensions for several of Rust's standard type
 # Cargo.toml
 
 [dependencies]
-type-toppings = { version = "0.2.0", features = ["iterator"] }
+type-toppings = { version = "0.2", features = ["iterator"] }
 ```
 
 ```rust

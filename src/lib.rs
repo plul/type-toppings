@@ -23,6 +23,8 @@
 //!
 //! For more detailed examples, see the documentation for each trait and method.
 
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+
 #[cfg(feature = "iterator")]
 mod iterator;
 

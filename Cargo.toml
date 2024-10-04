@@ -1,6 +1,6 @@
 [package]
 name = "type-toppings"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Asger Juul Brunshøj <asgerbrunshoj@gmail.com>"]
 description = "Opinionated extensions to standard types"
 edition = "2021"
@@ -11,10 +11,14 @@ repository = "https://github.com/plul/type-toppings"
 
 [features]
 default = []
+full = ["iterator", "result", "stream"]
 iterator = []
 result = ["error_reporter"]
 stream = ["futures"]
 
+[package.metadata.docs.rs]
+features = ["full"]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 error_reporter = { version = "1", optional = true }
