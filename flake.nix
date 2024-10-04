@@ -8,34 +8,29 @@
     basecamp.url = "github:plul/basecamp";
     basecamp.inputs.nixpkgs.follows = "nixpkgs";
     basecamp.inputs.rust-overlay.follows = "rust-overlay";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
   outputs =
     inputs@{
-      self,
       basecamp,
       flake-parts,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      flake.basecamp-config = {
-        rust.enable = true;
-        rust.cargo-udeps.enable = true;
-      };
-
       systems = [ "x86_64-linux" ];
 
       perSystem =
         { config, pkgs, ... }:
         {
-          devShells.default = basecamp.mkShell {
-            inherit pkgs;
-            config = self.basecamp-config;
-
-            packages = p: [
-              p.cargo-outdated
-              p.cargo-audit
-              p.cargo-hack
+          devShells.default = basecamp.mkShell pkgs {
+            rust.enable = true;
+            rust.packages.cargo-udeps.enable = true;
+            packages = [
+              pkgs.cargo-outdated
+              pkgs.cargo-audit
+              pkgs.cargo-hack
             ];
           };
         };
