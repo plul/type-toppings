@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct MapRes<I, F> {
     pub(crate) iter: I,
     pub(crate) f: F,

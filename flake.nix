@@ -22,7 +22,7 @@
       systems = [ "x86_64-linux" ];
 
       perSystem =
-        { config, pkgs, ... }:
+        { pkgs, ... }:
         {
           devShells.default = basecamp.mkShell pkgs {
             rust.enable = true;

@@ -1,5 +1,6 @@
 /// An iterator adapter that converts the items of an inner iterator
 /// producing `T` into `U` using the `Into` trait.
+#[derive(Debug)]
 pub struct MapInto<I, U> {
     pub(crate) iter: I,
     pub(crate) _marker: std::marker::PhantomData<U>,

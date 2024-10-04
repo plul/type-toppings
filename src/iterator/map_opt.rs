@@ -1,5 +1,6 @@
 /// An iterator adapter that applies a function to the items of an inner iterator
 /// producing `Option<T>`, transforming the `Some` values.
+#[derive(Debug)]
 pub struct MapOpt<I, F> {
     pub(crate) iter: I,
     pub(crate) f: F,

@@ -8,29 +8,34 @@
 //! # Examples:
 //!
 //! ```
-//! use type_toppings::IteratorExt;
-//!
-//! // Map only the Some values in an iterator of Option<T>:
-//! let data: Vec<_> = vec![Some(1), None, Some(3)]
-//!     .into_iter()
-//!     .map_opt(|x| x * 2)
-//!     .collect();
+//! #[cfg(feature = "iterator")]
+//! {
+//!     use type_toppings::IteratorExt;
+//!    
+//!     // Map only the Some values in an iterator of Option<T>:
+//!     let data: Vec<_> = vec![Some(1), None, Some(3)]
+//!         .into_iter()
+//!         .map_opt(|x| x * 2)
+//!         .collect();
+//!     assert_eq!(data, vec![Some(2), None, Some(6)]);
+//! }
 //! ```
 //!
 //! For more detailed examples, see the documentation for each trait and method.
 
-#![deny(rust_2018_idioms, nonstandard_style, future_incompatible)]
-#![deny(missing_docs)]
-
+#[cfg(feature = "iterator")]
 mod iterator;
+
+#[cfg(feature = "result")]
 mod result;
 
-#[cfg(feature = "futures")]
+#[cfg(feature = "stream")]
 mod stream;
 
 /// [`std::result::Result`] extensions.
 ///
 /// Methods for the `Result` type for more descriptive unwrapping and error handling patterns.
+#[cfg(feature = "result")]
 pub trait ResultExt {
     /// Success value
     type T;
@@ -71,12 +76,12 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Top-level error")]
-    /// struct TopError(#[source] SubError);
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Top-level error")]
+    /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Sub-level error")]
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Sub-level error")]
     /// struct SubError;
     ///
     /// let x: Result<u32, TopError> = Err(TopError(SubError));
@@ -105,12 +110,12 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Top-level error")]
-    /// struct TopError(#[source] SubError);
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Top-level error")]
+    /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Sub-level error")]
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Sub-level error")]
     /// struct SubError;
     ///
     /// let x: Result<u32, TopError> = Err(TopError(SubError));
@@ -132,12 +137,12 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Top-level error")]
-    /// struct TopError(#[source] SubError);
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Top-level error")]
+    /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, thiserror::Error)]
-    /// #[error("Sub-level error")]
+    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[display("Sub-level error")]
     /// struct SubError;
     ///
     /// let x: Result<u32, TopError> = Err(TopError(SubError));
@@ -150,7 +155,7 @@ pub trait ResultExt {
 }
 
 /// [`futures::Stream`] extensions.
-#[cfg(feature = "futures")]
+#[cfg(feature = "stream")]
 pub trait StreamExt {
     /// Chains a single ready item to the end of the stream.
     ///
@@ -195,6 +200,7 @@ pub trait StreamExt {
 }
 
 /// [`std::iter::Iterator`] extensions.
+#[cfg(feature = "iterator")]
 pub trait IteratorExt {
     /// Transforms the items in the iterator using the `Into` trait to convert
     /// from `T` to `U`.
@@ -273,8 +279,8 @@ pub trait IteratorExt {
     /// ```
     /// # use type_toppings::IteratorExt as _;
     /// let numbers = vec![1, 2, 3];
-    /// let joined = numbers.into_iter().join_as_strings(", ");
-    /// assert_eq!(joined, "1, 2, 3");
+    /// let sequence = numbers.into_iter().join_as_strings(", ");
+    /// assert_eq!(sequence, "1, 2, 3");
     ///
     /// let words = vec!["hello", "world"];
     /// let sentence = words.into_iter().join_as_strings(" - ");

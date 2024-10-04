@@ -46,13 +46,13 @@ mod tests {
     use crate::ResultExt;
 
     // A mock error for testing purposes
-    #[derive(Debug, thiserror::Error)]
-    #[error("A mock error occurred")]
-    struct MockError(#[source] MockSubError);
+    #[derive(Debug, derive_more::Error, derive_more::Display)]
+    #[display("A mock error occurred")]
+    struct MockError(MockSubError);
 
     // A mock error for testing purposes
-    #[derive(Debug, thiserror::Error)]
-    #[error("A mock sub error occurred")]
+    #[derive(Debug, derive_more::Error, derive_more::Display)]
+    #[display("A mock sub error occurred")]
     struct MockSubError;
 
     // Sanity test for how this works with the std lib expect method that just uses the Debug impl to display the error
