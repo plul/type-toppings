@@ -21,7 +21,7 @@ impl<T, E> crate::ResultExt for Result<T, E> {
     where
         Self::E: std::error::Error,
     {
-        self.map_err(|err| error_reporter::Report::new(err).pretty(true)).expect(msg)
+        self.map_err(Into::<crate::report::Report<_>>::into).expect(msg)
     }
 
     fn expect_or_report_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
@@ -29,14 +29,14 @@ impl<T, E> crate::ResultExt for Result<T, E> {
         Self::E: std::error::Error,
         M: AsRef<str>,
     {
-        self.map_err(|err| error_reporter::Report::new(err).pretty(true)).expect_with(f)
+        self.map_err(Into::<crate::report::Report<_>>::into).expect_with(f)
     }
 
     fn unwrap_or_report(self) -> Self::T
     where
         Self::E: std::error::Error,
     {
-        self.map_err(|err| error_reporter::Report::new(err).pretty(true))
+        self.map_err(Into::<crate::report::Report<_>>::into)
             .expect("called `unwrap_or_report()` on an `Err` value")
     }
 }

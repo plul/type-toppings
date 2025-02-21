@@ -10,11 +10,11 @@ repository = "https://github.com/plul/type-toppings"
 version = "0.2.1"
 
 [features]
-default = []
+default = ["option", "result", "iterator"]
 full = ["iterator", "option", "result", "stream"]
 iterator = []
 option = []
-result = ["error_reporter"]
+result = []
 stream = ["futures"]
 
 [package.metadata.docs.rs]
@@ -22,7 +22,6 @@ features = ["full"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-error_reporter = { version = "1", optional = true }
 futures = { version = "0.3.28", optional = true }
 
 [dev-dependencies]

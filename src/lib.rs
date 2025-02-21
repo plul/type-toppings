@@ -37,6 +37,8 @@ mod result;
 #[cfg(feature = "stream")]
 mod stream;
 
+mod report;
+
 /// [`std::option::Option`] extensions.
 ///
 /// Methods for the `Option` type.
