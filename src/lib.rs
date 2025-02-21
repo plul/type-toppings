@@ -28,11 +28,64 @@
 #[cfg(feature = "iterator")]
 mod iterator;
 
+#[cfg(feature = "option")]
+mod option;
+
 #[cfg(feature = "result")]
 mod result;
 
 #[cfg(feature = "stream")]
 mod stream;
+
+/// [`std::option::Option`] extensions.
+///
+/// Methods for the `Option` type.
+#[cfg(feature = "option")]
+pub trait OptionExt<T> {
+    /// Asserts the option to be [`None`], panicking otherwise.
+    ///
+    /// The closure `f` is only evaluated if the option is [`Some`].
+    ///
+    /// # Panics
+    ///
+    /// Panics if the value is [`Some`], with a panic message provided by
+    /// the closure `f`.
+    ///
+    /// # Examples
+    ///
+    /// ```should_panic
+    /// # use type_toppings::OptionExt as _;
+    /// let x: Option<u32> = Some(0);
+    /// x.assert_none(|value| format!("option contained a value: {value}"));
+    /// ```
+    fn assert_none<M, F>(&self, f: F)
+    where
+        F: FnOnce(&T) -> M,
+        M: AsRef<str>;
+
+    /// Asserts the option to be [`None`], panicking otherwise.
+    ///
+    /// The closure `f` is only evaluated if the option is [`Some`].
+    ///
+    /// When debug assertions are disabled, this has no effect.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the value is [`Some`], with a panic message provided by
+    /// the closure `f`.
+    ///
+    /// # Examples
+    ///
+    /// ```should_panic
+    /// # use type_toppings::OptionExt as _;
+    /// let x: Option<u32> = Some(0);
+    /// x.debug_assert_none(|value| format!("option contained a value: {value}"));
+    /// ```
+    fn debug_assert_none<M, F>(&self, f: F)
+    where
+        F: FnOnce(&T) -> M,
+        M: AsRef<str>;
+}
 
 /// [`std::result::Result`] extensions.
 ///

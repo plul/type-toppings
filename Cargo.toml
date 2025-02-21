@@ -11,8 +11,9 @@ version = "0.2.1"
 
 [features]
 default = []
-full = ["iterator", "result", "stream"]
+full = ["iterator", "option", "result", "stream"]
 iterator = []
+option = []
 result = ["error_reporter"]
 stream = ["futures"]
 
