@@ -5,8 +5,12 @@
 - Added: `OptionExt` trait.
 - Added: `OptionExt::assert_none` - Asserts the option to be `None`, panicking otherwise.
 - Added: `OptionExt::debug_assert_none` - Asserts the option to be `None`, panicking otherwise, but only as a debug assertion.
+- Added: `ResultExt::map_err_report` method.
 - Changed: Features `option`, `result`, and `iterator` are enabled by default.
 - Changed: Removed dependency on `error_reporter`.
+- Removed: `ResultExt::expect_or_report` method.
+- Removed: `ResultExt::expect_or_report_with` method.
+- Removed: `ResultExt::unwrap_or_report` method.
 
 ## v0.2.1
 

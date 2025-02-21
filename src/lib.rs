@@ -37,7 +37,7 @@ mod result;
 #[cfg(feature = "stream")]
 mod stream;
 
-mod report;
+pub mod report;
 
 /// [`std::option::Option`] extensions.
 ///
@@ -100,6 +100,37 @@ pub trait ResultExt {
     /// Error value
     type E;
 
+    /// Maps the error to [Report](crate::report::Report), a type that includes
+    /// the chain of source errors when displaying the error.
+    ///
+    /// # Examples
+    ///
+    /// ```should_panic
+    /// # use type_toppings::ResultExt as _;
+    /// use derive_more::{Display, Error};
+    ///
+    /// #[derive(Debug, Error, Display)]
+    /// #[display("Outer error")]
+    /// struct OuterError(InnerError);
+    ///
+    /// #[derive(Debug, Error, Display)]
+    /// #[display("Inner error")]
+    /// struct InnerError;
+    ///
+    /// let x: Result<u32, OuterError> = Err(OuterError(InnerError));
+    /// x.map_err_report().expect("Failure detected");
+    /// ```
+    /// The above panics with
+    /// ```text
+    /// Failure detected: Outer error
+    ///
+    /// Caused by:
+    ///       Inner error
+    /// ```
+    fn map_err_report(self) -> Result<Self::T, crate::report::Report<Self::E>>
+    where
+        Self::E: std::error::Error;
+
     /// Unwraps the result, yielding the content of an [`Ok`].
     ///
     /// The closure `f` is only evaluated if the result contains an error.
@@ -121,100 +152,6 @@ pub trait ResultExt {
     where
         Self::E: std::fmt::Debug,
         M: AsRef<str>;
-
-    /// Unwraps the result, yielding the content of an [`Ok`].
-    ///
-    /// # Panics
-    ///
-    /// Panics if the value is an [`Err`], with a panic message given as `msg`
-    /// and followed by a report of the full error chain.
-    ///
-    /// # Examples
-    ///
-    /// ```should_panic
-    /// # use type_toppings::ResultExt as _;
-    /// use derive_more::{Display, Error};
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Top-level error")]
-    /// struct TopError(SubError);
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Sub-level error")]
-    /// struct SubError;
-    ///
-    /// let x: Result<u32, TopError> = Err(TopError(SubError));
-    /// x.expect_or_report("Failure detected");
-    /// ```
-    /// The above panics with
-    /// ```text
-    /// Failure detected: Top-level error
-    ///
-    /// Caused by:
-    ///       Sub-level error
-    /// ```
-    #[track_caller]
-    fn expect_or_report(self, msg: &str) -> Self::T
-    where
-        Self::E: std::error::Error;
-
-    /// Unwraps the result, yielding the content of an [`Ok`].
-    ///
-    /// # Panics
-    ///
-    /// Panics if the value is an [`Err`], with a panic message provided by
-    /// the closure `f` and followed by a report of the full error chain.
-    ///
-    /// # Examples
-    ///
-    /// ```should_panic
-    /// # use type_toppings::ResultExt as _;
-    /// use derive_more::{Display, Error};
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Top-level error")]
-    /// struct TopError(SubError);
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Sub-level error")]
-    /// struct SubError;
-    ///
-    /// let x: Result<u32, TopError> = Err(TopError(SubError));
-    /// x.expect_or_report_with(|| "Dynamic failure detected");
-    /// ```
-    #[track_caller]
-    fn expect_or_report_with<M, F: FnOnce() -> M>(self, f: F) -> Self::T
-    where
-        Self::E: std::error::Error,
-        M: AsRef<str>;
-
-    /// Unwraps the result, yielding the content of an [`Ok`].
-    ///
-    /// # Panics
-    ///
-    /// Panics if the value is an [`Err`], with a report of the full error chain.
-    ///
-    /// # Examples
-    ///
-    /// ```should_panic
-    /// # use type_toppings::ResultExt as _;
-    /// use derive_more::{Display, Error};
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Top-level error")]
-    /// struct TopError(SubError);
-    ///
-    /// #[derive(Debug, Error, Display)]
-    /// #[display("Sub-level error")]
-    /// struct SubError;
-    ///
-    /// let x: Result<u32, TopError> = Err(TopError(SubError));
-    /// x.unwrap_or_report();
-    /// ```
-    #[track_caller]
-    fn unwrap_or_report(self) -> Self::T
-    where
-        Self::E: std::error::Error;
 }
 
 /// [`futures::Stream`] extensions.

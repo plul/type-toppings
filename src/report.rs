@@ -1,11 +1,11 @@
-//! This module is inspired from [std::error::Report].
+//! This module is inspired from [std::error::Report], which is unstable at the time of writing.
 
 use std::error::Error;
 use std::fmt::Write;
 use std::fmt::{self};
 
-/// Test report.
-pub(crate) struct Report<E> {
+/// Error report used in lieu of [std::error::Report] until that becomes stable.
+pub struct Report<E> {
     pub(crate) error: E,
 }
 
