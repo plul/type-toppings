@@ -2,8 +2,9 @@
 
 Opinionated collection of utility extensions for several of Rust's standard types, including:
 
-- `Result`
 - `Iterator`
+- `Option`
+- `Result`
 - `futures::Steam`
 
 ## Documentation
@@ -16,7 +17,7 @@ Opinionated collection of utility extensions for several of Rust's standard type
 # Cargo.toml
 
 [dependencies]
-type-toppings = { version = "0.2", features = ["iterator"] }
+type-toppings = { version = "0.2" }
 ```
 
 ```rust
