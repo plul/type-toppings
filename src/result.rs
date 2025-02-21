@@ -44,14 +44,16 @@ impl<T, E> crate::ResultExt for Result<T, E> {
 #[cfg(test)]
 mod tests {
     use crate::ResultExt;
+    use derive_more::Display;
+    use derive_more::Error;
 
     // A mock error for testing purposes
-    #[derive(Debug, derive_more::Error, derive_more::Display)]
+    #[derive(Debug, Error, Display)]
     #[display("A mock error occurred")]
     struct MockError(MockSubError);
 
     // A mock error for testing purposes
-    #[derive(Debug, derive_more::Error, derive_more::Display)]
+    #[derive(Debug, Error, Display)]
     #[display("A mock sub error occurred")]
     struct MockSubError;
 

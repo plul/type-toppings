@@ -131,11 +131,13 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// use derive_more::{Display, Error};
+    ///
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Top-level error")]
     /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Sub-level error")]
     /// struct SubError;
     ///
@@ -165,11 +167,13 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// use derive_more::{Display, Error};
+    ///
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Top-level error")]
     /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Sub-level error")]
     /// struct SubError;
     ///
@@ -192,11 +196,13 @@ pub trait ResultExt {
     ///
     /// ```should_panic
     /// # use type_toppings::ResultExt as _;
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// use derive_more::{Display, Error};
+    ///
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Top-level error")]
     /// struct TopError(SubError);
     ///
-    /// #[derive(Debug, derive_more::Error, derive_more::Display)]
+    /// #[derive(Debug, Error, Display)]
     /// #[display("Sub-level error")]
     /// struct SubError;
     ///
