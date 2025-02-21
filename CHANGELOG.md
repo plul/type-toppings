@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added: `OptionExt` trait.
+- Added: `OptionExt::assert_none` - Asserts the option to be `None`, panicking otherwise.
+- Added: `OptionExt::debug_assert_none` - Asserts the option to be `None`, panicking otherwise, but only as a debug assertion.
+- Changed: Features `option`, `result`, and `iterator` are enabled by default.
+- Changed: Removed dependency on `error_reporter`.
+
 ## v0.2.1
 
 - Added: Crate metadata to guide docs.rs documentation generation.
