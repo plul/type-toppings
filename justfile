@@ -13,8 +13,11 @@ check:
     RUSTDOCFLAGS='-Dwarnings' cargo hack --feature-powerset doc --no-deps
 
     # Check for unused/outdated dependencies
-    cargo udeps
-    cargo outdated --depth=1
+    # NOTE: Waiting for edition 2024 support
+    # cargo udeps
+
+    # NOTE: Waiting for edition 2024 support
+    # cargo outdated --depth=1
 
     # Check Nix
     nix flake check
